@@ -6,8 +6,8 @@ const hash = bcrypt.hashSync(password, salt)
 return hash
 }
 
-const comparePassword = (password, hash) => {
-return bcrypt.compareSync(password, hash)
+const comparePassword = (pass, hash) => {
+return bcrypt.compareSync(pass, hash)
 
 }
 
