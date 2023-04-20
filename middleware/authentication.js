@@ -14,12 +14,7 @@ const authentication = async (req, res, next) => {
     const decode = verifyToken(access_token);
 
     console.log(decode);
-    const user = await User.findOne({
-      where: {
-        id: decode.id,
-        email: decode.email,
-      },
-    });
+    const user = await db.query(`select id, user from users where id =$1 and email = $2`, [decode(id), decode(email)]);
 
     if (!user) {
       throw {
