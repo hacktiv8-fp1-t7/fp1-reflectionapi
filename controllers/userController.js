@@ -27,18 +27,18 @@ class userController {
               email,
               password
             } = req.body
-          
-            const user =  await db.query(`select * from users where email = $1 and password = $2;`, [email, hashPassword(password)], (error, results) =>{
-             // const getPass = db.query(`select password from users where password = $1`, [password], (err, res) =>{
-            if (error){
-                throw error
-              }
-          })
-          
+            
+            
+
+            const { rows } =  await db.query(`select id, email from users where email = $1;`, [email])
+
+            const user = rows[0]
+
             if (!user) {
               throw {
                 code: 404,
-                message: "User not found"
+                message: "User not found",
+                rows: rows
               }
             }
       
@@ -57,7 +57,7 @@ class userController {
               email: user.email,
             }
       
-            const access_token = generateToken(response)
+            const access_token = generateToken(user)
       
             res.status(200).json({
               access_token,
