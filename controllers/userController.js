@@ -27,17 +27,14 @@ class userController {
               email,
               password
             } = req.body
-            
-            const isCorrect = comparePassword(pass, hashPassword(password))
-            
-            const user = db.query(`select * from users where email = $1 && password = $2;`, [email, isCorrect], (error) =>{
-           // const getPass = db.query(`select password from users where password = $1`, [password], (err, res) =>{
-
-                if(error){
-                    console.log(error);
-                }
-            })
-      
+          
+            const user =  await db.query(`select * from users where email = $1 and password = $2;`, [email, hashPassword(password)], (error, results) =>{
+             // const getPass = db.query(`select password from users where password = $1`, [password], (err, res) =>{
+            if (error){
+                throw error
+              }
+          })
+          
             if (!user) {
               throw {
                 code: 404,
@@ -46,7 +43,7 @@ class userController {
             }
       
             // compare password
-            
+            const isCorrect = comparePassword(password, hashPassword(password))
       
             if (!isCorrect) {
               throw {
@@ -63,12 +60,12 @@ class userController {
             const access_token = generateToken(response)
       
             res.status(200).json({
-              access_token
+              access_token,
+              user
             })
       
           } catch (error) {
-            if (res.status(400))
-            res.json()
+            console.log(error);
             
           }
     }
