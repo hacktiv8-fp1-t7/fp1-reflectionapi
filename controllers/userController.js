@@ -11,10 +11,15 @@ class userController {
                 email, password
             } = req.body
 
-            await db.query(`insert into users (email, password) values($1, $2);`,
+           const result =  await db.query(`insert into users (email, password) values($1, $2);`,
             [email, hashPassword(password)])
-              
-            res.status(201).json({message: "user created"})
+            
+            console.log(result);
+
+           const id = result.rows[0].id
+           
+           console.log(id);
+            res.status(201).json({message: "user created", id, email})
 
         }catch(error){
             console.log(error)
@@ -51,12 +56,7 @@ class userController {
                 message: "Incorrect password"
               }
             }
-      
-            const response = {
-              id: user.id,
-              email: user.email,
-            }
-      
+            
             const access_token = generateToken(user)
       
             res.status(200).json({
