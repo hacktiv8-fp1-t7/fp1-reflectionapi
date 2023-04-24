@@ -1,9 +1,9 @@
 const config = {
-    user: "postgres",
-    host: "localhost",
-    database: "reflection_db",
-    password: "root",
-    port: 5432
-}
+  user: "postgres",
+  host: "localhost",
+  database: "reflection_db",
+  password: "root",
+  port: 5432,
+};
 
-module.exports = config
+module.exports = config;
