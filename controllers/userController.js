@@ -1,30 +1,28 @@
-const db = require("../database")
-const { hashPassword, comparePassword } = require("../helpers/bcrypt")
-const { generateToken } = require("../helpers/jwt")
-
+const db = require("../database");
+const { hashPassword, comparePassword } = require("../helpers/bcrypt");
+const { generateToken } = require("../helpers/jwt");
 
 class userController {
+  static async register(req, res) {
+    try {
+      const { email, password } = req.body;
 
-    static async register(req,res){
-        try{
-            const{
-                email, password
-            } = req.body
+      await db.query(`insert into users (email, password) values($1, $2);`, [email, hashPassword(password)]);
 
-           const result =  await db.query(`insert into users (email, password) values($1, $2);`,
-            [email, hashPassword(password)])
-            
-            console.log(result);
+      const result = await db.query(`insert into users (email, password) values($1, $2);`, [email, hashPassword(password)]);
 
-           const id = result.rows[0].id
-           
-           console.log(id);
-            res.status(201).json({message: "user created", id, email})
+      console.log(result);
 
-        }catch(error){
-            console.log(error)
-        }
+      const id = result.rows[0].id;
+
+      console.log(id);
+      res.status(201).json({ message: "user created", id, email });
+
+      console.log(result);
+    } catch (error) {
+      console.log(error);
     }
+  }
 
     static async login(req,res){ 
         try {
@@ -70,4 +68,4 @@ class userController {
     }
 }
 
-module.exports = userController
+module.exports = userController;
