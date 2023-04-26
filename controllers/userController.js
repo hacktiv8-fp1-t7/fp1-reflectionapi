@@ -17,10 +17,13 @@ class userController {
 
       console.log(id);
       res.status(201).json({ message: "user created", id, email });
+
+      console.log(result);
     } catch (error) {
       console.log(error);
     }
   }
+
   static async login(req, res) {
     try {
       const { email, password } = req.body;
