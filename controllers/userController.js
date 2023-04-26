@@ -9,35 +9,36 @@ class userController {
 
       await db.query(`insert into users (email, password) values($1, $2);`, [email, hashPassword(password)]);
 
-      res.status(201).json({ message: "user created" });
+      const result = await db.query(`insert into users (email, password) values($1, $2);`, [email, hashPassword(password)]);
+
+      console.log(result);
+
+      const id = result.rows[0].id;
+
+      console.log(id);
+      res.status(201).json({ message: "user created", id, email });
     } catch (error) {
       console.log(error);
     }
   }
-
   static async login(req, res) {
     try {
-      console.log("tess");
       const { email, password } = req.body;
 
-      const isCorrect = comparePassword(pass, hashPassword(password));
+      const { rows } = await db.query(`select id, email from users where email = $1;`, [email]);
 
-      const user = db.query(`select * from users where email = $1 && password = $2;`, [email, isCorrect], (error) => {
-        // const getPass = db.query(`select password from users where password = $1`, [password], (err, res) =>{
-
-        if (error) {
-          console.log(error);
-        }
-      });
+      const user = rows[0];
 
       if (!user) {
         throw {
           code: 404,
           message: "User not found",
+          rows: rows,
         };
       }
 
       // compare password
+      const isCorrect = comparePassword(password, hashPassword(password));
 
       if (!isCorrect) {
         throw {
@@ -46,18 +47,14 @@ class userController {
         };
       }
 
-      const response = {
-        id: user.id,
-        email: user.email,
-      };
-
-      const access_token = generateToken(response);
+      const access_token = generateToken(user);
 
       res.status(200).json({
         access_token,
+        user,
       });
     } catch (error) {
-      if (res.status(400)) res.json();
+      console.log(error);
     }
   }
 }
