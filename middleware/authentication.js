@@ -38,8 +38,8 @@ const authentication = async (req, res, next) => {
           message: "user not found",
         };
       }
+      return next();
     });
-    return next();
   } catch (error) {
     res.status(error?.code || 500).json(error);
   }

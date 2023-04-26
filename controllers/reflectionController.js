@@ -7,7 +7,7 @@ class reflectionController {
     // res.send("ok");
     try {
       const { success, low_point, take_away } = req.body;
-      console.log(success);
+      // console.log(success);
       // for validation succes field
       const validEnum = ["success", "failed"];
       //empty validation
@@ -35,7 +35,7 @@ class reflectionController {
           const { id: UserId } = req.UserData;
           //query for find data target
           db.query(`select * from reflection where id=${id} and userid=${UserId};`, (err, result, field) => {
-            console.log(result, "ini data result controller");
+            // console.log(result, "ini data result controller");
             if (result.rowCount === 0) {
               return res.status(404).json({ message: "data not found" });
             } else {
@@ -43,7 +43,7 @@ class reflectionController {
               const { id: UserId } = req.UserData;
               // query for update data
               db.query(`update reflection set success='${success}', low_point=${low_point}, take_away= '${take_away}',createdat=NOW(),updatedat=NOW() where id=${id}`, (err, result, field) => {
-                console.log(result, "ini result update");
+                // console.log(result, "ini result update");
                 if (result.rowCount === 1) {
                   // return res.status(201).json({ message: "succes update data" });
                   return res.status(201).json({ message: "success update data" });
@@ -66,7 +66,7 @@ class reflectionController {
           const { id: UserId } = req.UserData;
           //query for find data target
           db.query(`select * from reflection where id=${id} and userid=${UserId};`, (err, result, field) => {
-            console.log(result, "ini data result controller");
+            // console.log(result, "ini data result controller");
             if (result.rowCount === 0) {
               return res.status(404).json({ message: "data not found" });
             } else {
@@ -74,7 +74,7 @@ class reflectionController {
               const { id: UserId } = req.UserData;
               // query for delete data target
               db.query(`delete from reflection where id=${id}`, (err, result, field) => {
-                console.log(result, "ini result delete");
+                // console.log(result, "ini result delete");
                 if (result.rowCount === 1) {
                   return res.status(201).json({ message: "success delete data" });
                 } else {
