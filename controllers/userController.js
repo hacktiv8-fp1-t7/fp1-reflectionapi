@@ -33,8 +33,12 @@ class userController {
             } = req.body
             
             const { rows } =  await db.query(`select * from users where email = $1;`, [email])
-
-            const user = rows[0]
+            console.log(rows);
+            
+            const user = {
+              id: rows[0].id,
+              email: rows[0].email
+            }
 
             if (!user) {
               res.status(404).json({
@@ -46,7 +50,7 @@ class userController {
             }
       
             // compare password
-            const isCorrect = comparePassword(password, user.password)
+            const isCorrect = comparePassword(password, rows[0].password)
       
             if (!isCorrect) {
               res.status(404).json({
