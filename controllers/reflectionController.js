@@ -1,8 +1,39 @@
 const db = require("../database");
 
 class reflectionController {
-  static getReflections(req, res) {}
-  static createReflections(req, res) {}
+  static getReflections(req, res) {
+    try {
+      db.query(`select * from reflection`, (err, result, field) => {
+        if (result.rowCount === 0) {
+          return res.status(400).json({ message: "data not found" });
+        } else {
+          return res.status(201).json(result.rows);
+        }
+      });
+    }catch (error) {
+      console.log(error?.code || 500).json(error);
+    }
+    // res.send("test")
+  }
+  static createReflections(req, res) {
+    try{
+      const {success, low_point, take_away} = req.body;
+      const { id: UserId } = req.UserData;
+      console.log(UserId)
+      console.log(take_away)
+      db.query(`INSERT INTO reflection (success, low_point, take_away, userid, createdat, updatedat) VALUES ('${success}', ${low_point}, '${take_away}', ${UserId}, NOW(), NOW());`, (error, result, field) => {
+        console.log(result)
+        if (result.rowCount === 0) {
+          return res.status (400).json({message: "error"});
+        } else {
+          return res.status(201).json({ message: "Create data reflection" })
+        }
+      }) 
+    }catch (error) {
+      console.log(error?.code || 500).json(error);
+    }
+    // res.send("test")
+  }
   static updateReflectionsById(req, res) {
     // res.send("ok");
     try {
