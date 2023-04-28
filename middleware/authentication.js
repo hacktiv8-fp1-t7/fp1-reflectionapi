@@ -15,23 +15,17 @@ const authentication = async (req, res, next) => {
     const decode = verifyToken(access_token);
     const loadId = decode.id;
     const loadEmail = decode.email;
-    // console.log(loadEmail, loadId);
+    // global var
     let user;
-    // console.log(decode, "ini decode");
-    // const user = await db.query(`select id, user from users where id =$1 and email = $2`, [decode.id, decode.email]);
+    // query data validation
     await db.query(`select id, email from users where id=${loadId} and email= '${loadEmail}'`, (err, result, field) => {
-      // console.log(result.rows, "ini user");
-      // user = result.rows.find((item) => item.id === loadId && item.email === loadEmail);
-      // console.log(user, "ini user");
-
-      // console.log(result.rows[0]), "resultttt";
       user = result.rows[0];
-
+      // payload using for reflection controller
       req.UserData = {
         id: user.id,
         email: user.email,
       };
-      // console.log(req.UserData, "ini payload");
+
       if (!user) {
         throw {
           code: 401,

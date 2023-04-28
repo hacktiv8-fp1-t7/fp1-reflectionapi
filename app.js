@@ -5,6 +5,10 @@ const routers = require("./routers");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get("/", (req, res) => {
+  res.json({ message: "welcome to reflection API" });
+});
+
 app.use(routers);
 
 app.listen(3000, () => {
